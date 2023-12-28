@@ -40,25 +40,21 @@
         
     </head>
     <body class="vscode-body vscode-dark">
-        <pre><code class="language-markdown"><span class="hljs-section"># mkxz - Инструмент для архивации файлов</span>
-
-<span class="hljs-code">`mkxz`</span> - это скрипт на zsh для архивации директорий в файлы <span class="hljs-code">`.tar.xz`</span> и последующем создании индексного файла в формате JSON.
-
-<span class="hljs-section">## Основные особенности</span>
-
-<span class="hljs-bullet">-</span> Задание уровня сжатия (от 0 до 9).
-<span class="hljs-bullet">-</span> Опция исключения файлов определённых типов из архива (текст, изображения, видео, аудио).
-<span class="hljs-bullet">-</span> Опция включения файлов определённых типов в архив (текст, изображения, видео, аудио).
-<span class="hljs-bullet">-</span> Сохранение или игнорирование полного пути до файла в архиве.
-<span class="hljs-bullet">-</span> Управление дублирующимися файлами.
-<span class="hljs-bullet">-</span> Создание JSON-индекса, включающего в себя информацию о файлах (имя файла, размер, время последней модификации, владелец).
-
-<span class="hljs-section">## Использование</span>
-
-Скрипт принимает на вход следующие аргументы:
-<span class="hljs-code">```bash
-mkxz [options] directory
-</span></code></pre>
+        <h1 id="mkxz---%D0%B8%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BC%D0%B5%D0%BD%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B0%D1%80%D1%85%D0%B8%D0%B2%D0%B0%D1%86%D0%B8%D0%B8-%D1%84%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2">mkxz - Инструмент для архивации файлов</h1>
+<p><code>mkxz</code> - это скрипт на zsh для архивации директорий в файлы <code>.tar.xz</code> и последующем создании индексного файла в формате JSON.</p>
+<h2 id="%D0%BE%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D1%8B%D0%B5-%D0%BE%D1%81%D0%BE%D0%B1%D0%B5%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D0%B8">Основные особенности</h2>
+<ul>
+<li>Задание уровня сжатия (от 0 до 9).</li>
+<li>Опция исключения файлов определённых типов из архива (текст, изображения, видео, аудио).</li>
+<li>Опция включения файлов определённых типов в архив (текст, изображения, видео, аудио).</li>
+<li>Сохранение или игнорирование полного пути до файла в архиве.</li>
+<li>Управление дублирующимися файлами.</li>
+<li>Создание JSON-индекса, включающего в себя информацию о файлах (имя файла, размер, время последней модификации, владелец).</li>
+</ul>
+<h2 id="%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5">Использование</h2>
+<p>Скрипт принимает на вход следующие аргументы:</p>
+<pre><code class="language-bash">mkxz [options] directory
+</code></pre>
 <p>где <code>directory</code> - базовая директория для архивации.</p>
 <h2 id="%D0%BE%D0%BF%D1%86%D0%B8%D0%B8">Опции</h2>
 <ul>
@@ -73,33 +69,30 @@ mkxz [options] directory
 </ul>
 <h3 id="%D0%BF%D1%80%D0%B8%D0%BC%D0%B5%D1%80%D1%8B">Примеры</h3>
 <p>Архивирование директории с уровнем сжатия 9 (максимальный):</p>
-<pre><code class="language-bash">mkxz -9 directory
+<pre><code class="language-bash">mkxz -9 [directory]
 </code></pre>
 <p>Архивирование директории с исключением текстовых и видеофайлов:</p>
-<pre><code class="language-bash">mkxz -t -v directory
+<pre><code class="language-bash">mkxz -t -v [directory]
 </code></pre>
 <p>Архивирование директории с сохранением дерева путей и уровнем сжатия 7:</p>
-<pre><code class="language-bash">mkxz -X -7 directory
+<pre><code class="language-bash">mkxz -X -7 [directory]
 </code></pre>
 <p>Архивирование директории только с текстовыми файлами и настройкой &quot;плоского&quot; хранения:</p>
-<pre><code class="language-bash">mkxz -T -f directory
+<pre><code class="language-bash">mkxz -T -f [directory]
 </code></pre>
 <p>Архивирование директории для исключения изображений, создания JSON-индекса и замены дубликатов:</p>
-<pre><code class="language-bash">mkxz -i -j -F directory
+<pre><code class="language-bash">mkxz -i -j -F [directory]
 </code></pre>
 <h2 id="%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B0-%D1%81-%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C%D1%8E">Работа с помощью</h2>
 <p>Запуск данной команды показывает краткую справку по использованию скрипта.</p>
 <pre><code class="language-bash">mkxz -h
 </code></pre>
-<h2 id="%D1%83%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0">Установка</h2>
+<h2 id="%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0">становка</h2>
 <p>Клонирование репозитория и установка исполнения скрипта:</p>
-<pre><code class="language-bash">git <span class="hljs-built_in">clone</span> https://github.com/username/mkxz.git
+<pre><code class="language-bash">git <span class="hljs-built_in">clone</span> https://github.com/seocringe/mkxz.git
 <span class="hljs-built_in">cd</span> mkxz
 <span class="hljs-built_in">chmod</span> +x mkxz
-./mkxz
 </code></pre>
-<p>Замените &quot;username&quot; на свой GitHub username.</p>
-<pre><code></code></pre>
 
         
         
