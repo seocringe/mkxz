@@ -1,103 +1,130 @@
 #!/bin/zsh
 
 mkxz() {
-    declare -a image_extensions=("jpg" "jpeg" "png" "gif" "tiff" "bmp" "svg" "webp" "ico" "raw" "indd" "ai" "eps" "pdf")
-    declare -a video_extensions=("webm" "mkv" "flv" "vob" "ogv" "ogg" "drc" "gifv" "mng" "avi" "mts" "m2ts" "ts" "mov" "qt" "wmv" "yuv" "rm" "rmvb" "asf" "amv" "mp4" "m4p" "m4v" "mpg" "mp2" "mpeg" "mpe" "mpv" "m2v" "svi" "3gp" "3g2" "mxf" "roq" "nsv" "flv" "f4v" "f4p" "f4a" "f4b")
-    declare -a audio_extensions=("3gp" "aa" "aac" "aax" "act" "aiff" "alac" "amr" "ape" "au" "awb" "dct" "dss" "dvf" "flac" "gsm" "iklax" "ivs" "m4a" "m4b" "m4p" "mmf" "mp3" "mpc" "msv" "nmf" "ogg" "oga" "mogg" "opus" "spx" "ra" "rm" "raw" "tta" "wav" "webm" "8svx")
-    declare -a text_extensions=("txt" "csv" "xml" "json" "yml" "yaml" "md" "htm" "html" "php" "js" "py" "c" "cpp" "java" "pl" "rb" "swift" "go" "kt" "rs" "ts" "tsx" "jsx")
+    local compression_level='9'
+    local deduplicate_json=true
+    local tar_options=("--exclude=*/.*")
+    local exclude_extensions=()
+    local include_extensions=()
+    local flat_storage=false
+    local replace_duplicates=false
+    local include_path=false
+    local create_json_index=true
+    local usage_hierarchy=false
 
-    only_text=0
-    only_images=0
-    only_videos=0
-    only_sounds=0
-    exclude_all=0
-    preserve_path=false
-    flatten_dir=false
-    numeric_compression='9'
+    # Text File Extensions
+    local txt_exts=("txt" "doc" "docx" "pdf" "rtf")
 
-    declare -A ALLOWED_FLAGS=(
-        ["-t"]=only_text
-        ["-i"]=only_images
-        ["-v"]=only_videos
-        ["-s"]=only_sounds
-        ["-T"]=exclude_all
-        ["-I"]=exclude_all
-        ["-V"]=exclude_all
-        ["-S"]=exclude_all
-        ["-X"]=preserve_path
-        ["-x"]=preserve_path
-        ["-f"]=flatten_dir
-        ["-F"]=flatten_dir
-    )
+    # Image File Extensions
+    local img_exts=("jpg" "png" "svg" "bmp" "ico" "tiff" "gif")
 
-    while getopts "tivsTIVSXxVFf:0:1:2:3:4:5:6:7:8:9" flag; do
-        if [[ -v ALLOWED_FLAGS[$flag] ]]; then
-            declare ${ALLOWED_FLAGS[$flag]}=1
-        elif [[ $flag =~ [0-9] ]]; then
-            numeric_compression=$flag
-        else
-            echo "Unexpected option $flag"
-            exit 1
-        fi
+    # Video File Extensions
+    local vid_exts=("mp4" "mkv" "flv" "avi" "mov" "wmv")
+
+    # Audio File Extensions
+    local aud_exts=("mp3" "wav" "flac" "aac" "ogg")
+
+    while getopts ":J0:1:2:3:4:5:6:7:8:9:t:i:v:s:T:I:V:S:X:x:fFj" flag; do
+        case "$flag" in
+        J)
+            deduplicate_json=true
+            ;;
+        [0-9])
+            compression_level=$flag
+            ;;
+        t)
+            exclude_extensions+=(${txt_exts[@]})
+            ;;
+        i)
+            exclude_extensions+=(${img_exts[@]})
+            ;;
+        v)
+            exclude_extensions+=(${vid_exts[@]})
+            ;;
+        s)
+            exclude_extensions+=(${aud_exts[@]})
+            ;;
+        T)
+            include_extensions+=(${txt_exts[@]})
+            ;;
+        I)
+            include_extensions+=(${img_exts[@]})
+            ;;
+        V)
+            include_extensions+=(${vid_exts[@]})
+            ;;
+        S)
+            include_extensions+=(${aud_exts[@]})
+            ;;
+        X)
+            include_path=true
+            ;;
+        x)
+            include_path=false
+            ;;
+        f)
+            flat_storage=true
+            replace_duplicates=false
+            ;;
+        F)
+            flat_storage=false
+            replace_duplicates=true
+            ;;
+        j)
+            create_json_index=true
+            ;;
+        *)
+            echo "Unexpected option $flag" >&2
+            return 1
+            ;;
+        esac
     done
 
     shift $((OPTIND - 1))
-
-    tar_options=()
-    include_tar_option_for_extension_type() {
-        local -n extensions=$1
-        local flag=$2
-        if (( flag )); then
-            for extension in ${extensions[@]}; do
-                tar_options+=("--exclude=*.${extension}")
-            done
-        fi
-    }
-
-    if (( only_text )); then
-        tar_options+=("--exclude=*")
-        include_tar_option_for_extension_type text_extensions 0
-    elif (( only_images )); then
-        tar_options+=("--exclude=*")
-        include_tar_option_for_extension_type image_extensions 0
-    elif (( only_videos )); then
-        tar_options+=("--exclude=*")
-        include_tar_option_for_extension_type video_extensions 0
-    elif (( only_sounds )); then
-        tar_options+=("--exclude=*")
-        include_tar_option_for_extension_type audio_extensions 0
-    elif (( exclude_all )); then
-        include_tar_option_for_extension_type text_extensions 1
-        include_tar_option_for_extension_type image_extensions 1
-        include_tar_option_for_extension_type video_extensions 1
-        include_tar_option_for_extension_type audio_extensions 1
+    local base_dir=${1:-$(pwd)}
+    if [ ! -d "$base_dir" ]; then
+        echo "The specified path is not a directory or does not exist."
+        return 1
     fi
 
-    if (( preserve_path )); then
+    local archive_output_dir="$HOME/archives"
+    if [ ! -d "$archive_output_dir" ]; then
+        mkdir -p "$archive_output_dir"
+    fi
+
+    local date=$(date +%Y%m%d%H%M%S)
+    local archive_name="$(basename "$base_dir")-$date.tar.xz"
+    local archive_path="$archive_output_dir/$archive_name"
+
+    for ext in "${exclude_extensions[@]}"; do
+        tar_options+=("--exclude=*.${ext}")
+    done
+
+    if [[ "$include_path" == true ]]; then
         tar_options+=("--absolute-names")
     fi
 
-    archive_func() {
-        local base_dir=$(pwd)
-        local temp_dir=$(mktemp -d)
-        local date=$(date +%d-%m-%Y-%H-%M-%S)
-        local archive_name="$(basename "$PWD")-$date.tar.xz"
+    (cd "$base_dir" && find . -type f ! -name '.*' -print0 | tar cvpf - "${tar_options[@]}" --null -T- | xz -"${compression_level}" >"$archive_path")
 
-        local _tar_options=("${tar_options[@]}")
+    if [ $? -ne 0 ]; then
+        echo "An error occurred while creating or compressing the archive."
+        return 1
+    fi
 
-        if (( flatten_dir )); then
-            _tar_options+=("--transform=s|.*/\(.*\)|\1|")    
-            cp -rf "${base_dir}/." "${temp_dir}"
+    echo "Archive created: $archive_path"
+
+    if [[ "$create_json_index" == true ]]; then
+        local index_file="${archive_path}.index.json"
+
+        (cd "$base_dir" && find . -type f ! -name '.*' -printf '{"filename": "%P", "size": %s, "last_modified": "%TY-%Tm-%TdT%TT", "owner": "%u"}\n' | jq -s ${deduplicate_json:+'unique_by(.filename)'} >"$index_file")
+
+        if [ $? -ne 0 ]; then
+            echo "An error occurred while creating the index file."
+            return 1
         fi
 
-        tar --use-compress-program="xz -${numeric_compression}" -cf "${base_dir}/${archive_name}" -C "${temp_dir}" . ${_tar_options[@]} >&2
-
-        echo "Archive created: $PWD/$archive_name" >&2
-        rm -rf "$t" && echo "Temporary directory removed: $temp_dir" >&2
-        echo "$archive_name"
-    }
-
-    archive_func "$@"
+        echo "Index file created: $index_file"
+    fi
 }
 
 [[ $0 == $ZSH_NAME ]] && mkxz "$@"

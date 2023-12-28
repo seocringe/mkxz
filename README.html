@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>mkxz - &Icy;&ncy;&scy;&tcy;&rcy;&ucy;&mcy;&iecy;&ncy;&tcy; &dcy;&lcy;&yacy; &acy;&rcy;&khcy;&icy;&vcy;&acy;&tscy;&icy;&icy; &fcy;&acy;&jcy;&lcy;&ocy;&vcy;</title>
+        <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+        
+    </head>
+    <body class="vscode-body vscode-dark">
+        <pre><code class="language-markdown"><span class="hljs-section"># mkxz - Инструмент для архивации файлов</span>
+
+<span class="hljs-code">`mkxz`</span> - это скрипт на zsh для архивации директорий в файлы <span class="hljs-code">`.tar.xz`</span> и последующем создании индексного файла в формате JSON.
+
+<span class="hljs-section">## Основные особенности</span>
+
+<span class="hljs-bullet">-</span> Задание уровня сжатия (от 0 до 9).
+<span class="hljs-bullet">-</span> Опция исключения файлов определённых типов из архива (текст, изображения, видео, аудио).
+<span class="hljs-bullet">-</span> Опция включения файлов определённых типов в архив (текст, изображения, видео, аудио).
+<span class="hljs-bullet">-</span> Сохранение или игнорирование полного пути до файла в архиве.
+<span class="hljs-bullet">-</span> Управление дублирующимися файлами.
+<span class="hljs-bullet">-</span> Создание JSON-индекса, включающего в себя информацию о файлах (имя файла, размер, время последней модификации, владелец).
+
+<span class="hljs-section">## Использование</span>
+
+Скрипт принимает на вход следующие аргументы:
+<span class="hljs-code">```bash
+mkxz [options] directory
+</span></code></pre>
+<p>где <code>directory</code> - базовая директория для архивации.</p>
+<h2 id="%D0%BE%D0%BF%D1%86%D0%B8%D0%B8">Опции</h2>
+<ul>
+<li><code>-J</code>: Включает удаление дубликатов в JSON индексе.</li>
+<li><code>-0...-9</code>: Устанавливает уровень сжатия (0 минимальный, 9 максимальный).</li>
+<li><code>-t,-i,-v,-s</code>: Исключает из архива файлы типов текст, изображения, видео и аудио соответственно.</li>
+<li><code>-T,-I,-V,-S</code>: Включает в архив только файлы типов текст, изображения, видео и аудио соответственно.</li>
+<li><code>-X</code>: Сохраняет путь до файла в архиве.</li>
+<li><code>-x</code>: Игнорирует путь до файла в архиве.</li>
+<li><code>-f, -F</code>: Управляет дублирующимися файлами (<code>-f</code>: &quot;плоское&quot; хранение, <code>-F</code>: замена дубликатов).</li>
+<li><code>-j</code>: Включает создание JSON-индекса.</li>
+</ul>
+<h3 id="%D0%BF%D1%80%D0%B8%D0%BC%D0%B5%D1%80%D1%8B">Примеры</h3>
+<p>Архивирование директории с уровнем сжатия 9 (максимальный):</p>
+<pre><code class="language-bash">mkxz -9 directory
+</code></pre>
+<p>Архивирование директории с исключением текстовых и видеофайлов:</p>
+<pre><code class="language-bash">mkxz -t -v directory
+</code></pre>
+<p>Архивирование директории с сохранением дерева путей и уровнем сжатия 7:</p>
+<pre><code class="language-bash">mkxz -X -7 directory
+</code></pre>
+<p>Архивирование директории только с текстовыми файлами и настройкой &quot;плоского&quot; хранения:</p>
+<pre><code class="language-bash">mkxz -T -f directory
+</code></pre>
+<p>Архивирование директории для исключения изображений, создания JSON-индекса и замены дубликатов:</p>
+<pre><code class="language-bash">mkxz -i -j -F directory
+</code></pre>
+<h2 id="%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B0-%D1%81-%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C%D1%8E">Работа с помощью</h2>
+<p>Запуск данной команды показывает краткую справку по использованию скрипта.</p>
+<pre><code class="language-bash">mkxz -h
+</code></pre>
+<h2 id="%D1%83%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0">Установка</h2>
+<p>Клонирование репозитория и установка исполнения скрипта:</p>
+<pre><code class="language-bash">git <span class="hljs-built_in">clone</span> https://github.com/username/mkxz.git
+<span class="hljs-built_in">cd</span> mkxz
+<span class="hljs-built_in">chmod</span> +x mkxz
+./mkxz
+</code></pre>
+<p>Замените &quot;username&quot; на свой GitHub username.</p>
+<pre><code></code></pre>
+
+        
+        
+    </body>
+    </html>
