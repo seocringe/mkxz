@@ -1,16 +1,38 @@
 #!/bin/zsh
 
+minify_json() {
+    jq -c . "$1"
+}
+
+optimize_json() {
+    jq -c '
+    def merge_files:
+        reduce .[] as $item ({}; . + $item);
+        
+    def flat:
+        objects or arrays as $item | 
+        if $item then reduce $item[] as $i (.; . + $i | flat)
+        else . end;
+    
+    def build_directory_item:
+        {( (.filename | split("/"))[0] ):
+            { "files": [if .filename then del(.filename) else . end],
+              "total_size": (if .size then .size else 0 end)}};
+            
+    [.[] | build_directory_item] | add | flat
+    ' "$1"
+}
+
 mkxz() {
+    local jsonfile=""
+    local tempfile=$(mktemp)
     local compression_level='9'
     local deduplicate_json=true
     local tar_options=("--exclude=*/.*")
     local exclude_extensions=()
     local include_extensions=()
-    local flat_storage=false
-    local replace_duplicates=false
     local include_path=false
     local create_json_index=true
-    local usage_hierarchy=false
 
     # Text File Extensions
     local txt_exts=("txt" "doc" "docx" "pdf" "rtf")
@@ -24,10 +46,14 @@ mkxz() {
     # Audio File Extensions
     local aud_exts=("mp3" "wav" "flac" "aac" "ogg")
 
-    while getopts ":J0:1:2:3:4:5:6:7:8:9:t:i:v:s:T:I:V:S:X:x:fFj" flag; do
+    while getopts ":jJ0:1:2:3:4:5:6:7:8:9:t:i:v:s:T:I:V:S:X:x:" flag; do
         case "$flag" in
+        j)
+            deduplicate_json=false
+            ;;
         J)
-            deduplicate_json=true
+            shift
+            jsonfile=$1
             ;;
         [0-9])
             compression_level=$flag
@@ -62,17 +88,6 @@ mkxz() {
         x)
             include_path=false
             ;;
-        f)
-            flat_storage=true
-            replace_duplicates=false
-            ;;
-        F)
-            flat_storage=false
-            replace_duplicates=true
-            ;;
-        j)
-            create_json_index=true
-            ;;
         *)
             echo "Unexpected option $flag" >&2
             return 1
@@ -81,6 +96,14 @@ mkxz() {
     done
 
     shift $((OPTIND - 1))
+
+    # if jsonfile is specified, minify and optimize the json file
+    if [[ $deduplicate_json == true && -n "$jsonfile" && -f "$jsonfile" ]]; then
+        minify_json "$jsonfile" >"$tempfile"
+        optimize_json "$tempfile" >"$jsonfile"
+        rm "$tempfile"
+    fi
+
     local base_dir=${1:-$(pwd)}
     if [ ! -d "$base_dir" ]; then
         echo "The specified path is not a directory or does not exist."
@@ -104,7 +127,7 @@ mkxz() {
         tar_options+=("--absolute-names")
     fi
 
-    (cd "$base_dir" && find . -type f ! -name '.*' -print0 | tar cvpf - "${tar_options[@]}" --null -T- | xz -"${compression_level}" >"$archive_path")
+    (cd "$base_dir" && find . -type f ! -name '.*' -print0 | parallel --null --files tar "${tar_options[@]}" | xz -"${compression_level}" >"$archive_path")
 
     if [ $? -ne 0 ]; then
         echo "An error occurred while creating or compressing the archive."
@@ -116,9 +139,12 @@ mkxz() {
     if [[ "$create_json_index" == true ]]; then
         local index_file="${archive_path}.index.json"
 
-        (cd "$base_dir" && find . -type f ! -name '.*' -printf '{"filename": "%P", "size": %s, "last_modified": "%TY-%Tm-%TdT%TT", "owner": "%u"}\n' | jq -s ${deduplicate_json:+'unique_by(.filename)'} >"$index_file")
+        (cd "$base_dir" && find . -type f ! -name '.*' -printf '{"filename": "%P", "size": %s, "last_modified": "%TY-%Tm-%TdT%TT"}\n' | jq -c 'inputs' | jq -s ${deduplicate_json:+'unique_by(.filename)'} >"$tempfile")
 
-        if [ $? -ne 0 ]; then
+        optimize_json "$tempfile" >"$index_file"
+        rm -f "$tempfile"
+
+        if [ ! -s "$index_file" ]; then
             echo "An error occurred while creating the index file."
             return 1
         fi
