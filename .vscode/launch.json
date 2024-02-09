@@ -6,8 +6,8 @@
       "request": "launch",
       "name": "CMake: Настройка проекта",
       "cmakeDebugType": "configure",
-      "clean": false,
-      "configureAll": false
+      "clean": true,
+      "configureAll": true
     }
 
   ]
