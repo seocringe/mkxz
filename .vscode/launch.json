@@ -1,69 +1,14 @@
 {
-  // Используйте IntelliSense, чтобы узнать о возможных атрибутах.
-  // Наведите указатель мыши, чтобы просмотреть описания существующих атрибутов.
-  // Для получения дополнительной информации посетите: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "zshdb",
+      "type": "cmake",
       "request": "launch",
-      "name": "Zsh-Debug (type in script name)",
-      "cwd": "${workspaceFolder}",
-      "program": "${command:AskForScriptName}",
-      "args": []
-    },
-    {
-      "type": "zshdb",
-      "request": "launch",
-      "name": "Zsh-Debug (hardcoded script name)",
-      "cwd": "${workspaceFolder}",
-      "program": "${workspaceFolder}/path/to/script.sh",
-      "args": []
-    },
-    {
-      "type": "zshdb",
-      "request": "launch",
-      "name": "Zsh-Debug (select script from list of sh files)",
-      "cwd": "${workspaceFolder}",
-      "program": "${command:SelectScriptName}",
-      "args": []
-    },
-
-    {
-      "type": "bashdb",
-      "request": "launch",
-      "name": "Bash-Debug (type in script name)",
-      "cwd": "${workspaceFolder}",
-      "program": "${command:AskForScriptName}",
-      "args": []
-    },
-    {
-      "type": "bashdb",
-      "request": "launch",
-      "name": "Bash-Debug (select script from list of sh files)",
-      "cwd": "${workspaceFolder}",
-      "program": "${command:SelectScriptName}",
-      "args": []
-    },
-    {
-      "type": "bashdb",
-      "request": "launch",
-      "name": "Bash-Debug (hardcoded script name)",
-      "cwd": "${workspaceFolder}",
-      "program": "${workspaceFolder}/path/to/script.sh",
-      "args": []
-    },
-
-    {
-      "type": "browse-lite",
-      "name": "Browse Lite: Attach",
-      "request": "attach"
-    },
-    {
-      "type": "browse-lite",
-      "request": "launch",
-      "name": "Browse Lite: Launch",
-      "url": "http://localhost:3000"
+      "name": "CMake: Настройка проекта",
+      "cmakeDebugType": "configure",
+      "clean": false,
+      "configureAll": false
     }
+
   ]
 }
