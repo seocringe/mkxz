@@ -10,16 +10,19 @@ set(COMPILE_DIR "${CMAKE_BINARY_DIR}/out/build/bin")
 # Создаем директорию для скомпилированного скрипта
 file(MAKE_DIRECTORY ${COMPILE_DIR})
 message("Директория ${COMPILE_DIR} создана.")
+
 # Функция для добавления целей компиляции
 function(add_zsh_compile_target target_name script_name)
-  set(script_file "${script_name}.zsh")
-  set(compiled_script_file "${script_name}.zwc")
+  set(script_file ${script_name}.zsh)
+  set(compiled_script_file ${script_name}.zwc)
 
-  add_custom_target("${target_name}" ALL
-    COMMAND ${ZSH_PROGRAM} -c "zcompile '${CMAKE_SOURCE_DIR}/${script_file}' > '${COMPILE_DIR}/${compiled_script_file}'"
-    COMMENT "Компиляция ${script_file} в .zwc"
-    WORKING_DIRECTORY ${COMPILE_DIR}
-  )
+add_custom_target("${target_name}" ALL
+    COMMAND "${CMAKE_COMMAND}" -E env "ZSH_PROGRAM=${ZSH_PROGRAM}" "${CMAKE_COMMAND}" -E chdir "${COMPILE_DIR}" 
+            "${ZSH_PROGRAM}" -c 
+            "zcompile '${CMAKE_SOURCE_DIR}/${script_file}' &> '${compiled_script_file}'"
+    COMMENT "Compiling ${script_file} to .zwc"
+    WORKING_DIRECTORY "${COMPILE_DIR}"
+)
 
   # Установка скомпилированного скрипта
   install(FILES "${COMPILE_DIR}/${compiled_script_file}" DESTINATION bin
