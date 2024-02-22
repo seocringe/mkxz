@@ -68,7 +68,7 @@ include CMakeFiles/compile_mkxz.dir/progress.make
 
 CMakeFiles/compile_mkxz:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/ars/gh/mkxz/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Компиляция mkxz.zsh в mkxz.zwc"
-	cd /home/ars/gh/mkxz/out/build/bin && /usr/bin/zsh -c zcompile\ '/home/ars/gh/mkxz/mkxz.zsh'\ '/home/ars/gh/mkxz/out/build/bin/mkxz.zwc'
+	/usr/bin/zsh -c mkdir\ -p\ /home/ars/gh/mkxz/out/build/bin/\ &&\ zcompile\ -z\ /home/ars/gh/mkxz/mkxz.zsh\ -o\ /home/ars/gh/mkxz/out/build/bin/mkxz.zwc
 
 compile_mkxz: CMakeFiles/compile_mkxz
 compile_mkxz: CMakeFiles/compile_mkxz.dir/build.make

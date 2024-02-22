@@ -47,7 +47,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  message(\"Установка скрипта mkxz...\")
+  message("Установка скрипта mkxz...")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
