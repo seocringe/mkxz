@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/mkxz"
+  "CMakeFiles/compile_mkxz"
 )
 
 # Per-language clean rules from dependency scanning.
 foreach(lang )
-  include(CMakeFiles/mkxz.dir/cmake_clean_${lang}.cmake OPTIONAL)
+  include(CMakeFiles/compile_mkxz.dir/cmake_clean_${lang}.cmake OPTIONAL)
 endforeach()

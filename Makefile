@@ -182,17 +182,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named mkxz
+# Target rules for targets named compile_mkxz
 
 # Build rule for target.
-mkxz: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 mkxz
-.PHONY : mkxz
+compile_mkxz: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 compile_mkxz
+.PHONY : compile_mkxz
 
 # fast build rule for target.
-mkxz/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mkxz.dir/build.make CMakeFiles/mkxz.dir/build
-.PHONY : mkxz/fast
+compile_mkxz/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compile_mkxz.dir/build.make CMakeFiles/compile_mkxz.dir/build
+.PHONY : compile_mkxz/fast
 
 # Help Target
 help:
@@ -208,7 +208,7 @@ help:
 	@echo "... package"
 	@echo "... package_source"
 	@echo "... rebuild_cache"
-	@echo "... mkxz"
+	@echo "... compile_mkxz"
 .PHONY : help
 
 

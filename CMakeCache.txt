@@ -222,6 +222,9 @@ CPACK_SOURCE_TZ:BOOL=ON
 //Enable to build ZIP source packages
 CPACK_SOURCE_ZIP:BOOL=OFF
 
+//Path to a program.
+ZSH_PROGRAM:FILEPATH=/usr/bin/zsh
+
 //Value Computed by CMake
 mkxz_BINARY_DIR:STATIC=/home/ars/gh/mkxz
 

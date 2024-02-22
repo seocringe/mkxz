@@ -108,5 +108,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/mkxz.dir/DependInfo.cmake"
+  "CMakeFiles/compile_mkxz.dir/DependInfo.cmake"
   )

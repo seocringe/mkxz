@@ -1,4 +1,4 @@
-/home/ars/gh/mkxz/CMakeFiles/mkxz.dir
+/home/ars/gh/mkxz/CMakeFiles/compile_mkxz.dir
 /home/ars/gh/mkxz/CMakeFiles/package.dir
 /home/ars/gh/mkxz/CMakeFiles/package_source.dir
 /home/ars/gh/mkxz/CMakeFiles/edit_cache.dir

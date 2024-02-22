@@ -1,39 +1,33 @@
 cmake_minimum_required(VERSION 3.10)
 project(mkxz VERSION 1.0 LANGUAGES C)
 
-# Define variables for the script name and source
+# Проверяем наличие Zsh
+find_program(ZSH_PROGRAM zsh)
+if(NOT ZSH_PROGRAM)
+  message(FATAL_ERROR "zsh не найден. Установите zsh для продолжения.")
+endif()
+
+# Определение переменных для скриптов
 set(SCRIPT_NAME "mkxz")
 set(SCRIPT_FILE "${SCRIPT_NAME}.zsh")
+set(COMPILED_SCRIPT_FILE "${SCRIPT_NAME}.zwc")
+set(COMPILE_DIR "${CMAKE_BINARY_DIR}/out/build/bin")
 
-# List of sources (dependencies)
-set(SOURCES
-    ${SCRIPT_FILE}
+# Создаем директорию для скомпилированного скрипта
+file(MAKE_DIRECTORY ${COMPILE_DIR})
+
+add_custom_target(compile_mkxz ALL
+  COMMAND ${ZSH_PROGRAM} -c "zcompile '${CMAKE_SOURCE_DIR}/${SCRIPT_FILE}' '${COMPILE_DIR}/${COMPILED_SCRIPT_FILE}'"
+  COMMENT "Компиляция ${SCRIPT_FILE} в ${COMPILED_SCRIPT_FILE}"
+  WORKING_DIRECTORY ${COMPILE_DIR}
 )
 
-# Create a directory where the compiled script will be stored
-file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/out/build/bin")
+# Установка скомпилированного скрипта
+install(FILES "${COMPILE_DIR}/${COMPILED_SCRIPT_FILE}" DESTINATION bin
+        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ)
 
-# Add a custom target that compiles the .zsh script into a .zwc bytecode file
-add_custom_target(
-    ${SCRIPT_NAME}
-    COMMAND zsh -c "zcompile ${SCRIPT_FILE} -o ${SCRIPT_NAME}.zwc"
-    DEPENDS ${SOURCES}
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/out/build/bin"
-)
-
-# Optional: Add a command to display a message when building the mkxz target
-add_custom_command(
-    TARGET ${SCRIPT_NAME}
-    PRE_BUILD
-    COMMAND echo "Building ${SCRIPT_NAME} script..."
-    DEPENDS ${SOURCES}
-)
-
-# Copy the compiled script to the installation directory
-install(FILES "${CMAKE_BINARY_DIR}/out/build/bin/${SCRIPT_NAME}.zwc" DESTINATION bin)
-
-# Optional: Add a custom install step command
-install(CODE "message(\"Installing ${SCRIPT_NAME} script...\")")
+# Дополнительные сообщения в процессе установки
+install(CODE "message(\\\"Установка скрипта ${SCRIPT_NAME}...\\\")")
 
 set(CPACK_GENERATOR "TGZ;ZIP")
 include(CPack)
