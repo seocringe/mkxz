@@ -6,10 +6,13 @@ pkgver=2.1
 <<<<<<< HEAD
 =======
 pkgrel=1
+<<<<<<< HEAD
 pkgname=mkxz
 pkgver=2.1
 >>>>>>> 19eca61 (	modified:   PKGBUILD)
 pkgrel=1
+=======
+>>>>>>> 25e3ee2 (	modified:   PKGBUILD)
 pkgdesc="A tool for archiving directories into .tar.xz files with options for excluding specific file types and generating a JSON index."
 arch=('any')
 url="https://github.com/seocringe/mkxz"
