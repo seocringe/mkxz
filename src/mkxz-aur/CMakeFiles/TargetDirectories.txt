@@ -1,0 +1,10 @@
+/home/ars/gh/mkxz/src/mkxz-aur/CMakeFiles/compile_mkxz.dir
+/home/ars/gh/mkxz/src/mkxz-aur/CMakeFiles/compile_modified_mkxz.dir
+/home/ars/gh/mkxz/src/mkxz-aur/CMakeFiles/package.dir
+/home/ars/gh/mkxz/src/mkxz-aur/CMakeFiles/package_source.dir
+/home/ars/gh/mkxz/src/mkxz-aur/CMakeFiles/edit_cache.dir
+/home/ars/gh/mkxz/src/mkxz-aur/CMakeFiles/rebuild_cache.dir
+/home/ars/gh/mkxz/src/mkxz-aur/CMakeFiles/list_install_components.dir
+/home/ars/gh/mkxz/src/mkxz-aur/CMakeFiles/install.dir
+/home/ars/gh/mkxz/src/mkxz-aur/CMakeFiles/install/local.dir
+/home/ars/gh/mkxz/src/mkxz-aur/CMakeFiles/install/strip.dir
