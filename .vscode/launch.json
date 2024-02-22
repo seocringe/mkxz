@@ -5,6 +5,7 @@
       "type": "cmake",
       "request": "launch",
       "name": "CMake: Настройка проекта",
+      "scriptPath": "script.cmake",
       "cmakeDebugType": "configure",
       "clean": true,
       "configureAll": true
