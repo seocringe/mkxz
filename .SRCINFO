@@ -1,0 +1,15 @@
+pkgbase = mkxz
+	pkgdesc = A tool for archiving directories into .tar.xz files with options for excluding specific file types and generating a JSON index.
+	pkgver = 1.0
+	pkgrel = 1
+	url = https://github.com/seocringe/mkxz
+	arch = any
+	license = GPL
+	depends = zsh
+	depends = jq
+	depends = tar
+	depends = xz
+	source = https://github.com/seocringe/mkxz/archive/1.0.tar.gz
+	sha256sums = SKIP
+
+pkgname = mkxz
